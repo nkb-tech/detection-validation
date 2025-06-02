@@ -1,3 +1,11 @@
+"""
+YOLO to CSV Converter
+
+This script converts YOLO format datasets to CSV format for evaluation.
+It processes YOLO format annotations (normalized center_x, center_y, width, height)
+and converts them to pixel coordinates (xmin, ymin, xmax, ymax) in CSV format.
+"""
+
 import os
 import argparse
 import pandas as pd
@@ -5,6 +13,7 @@ from tqdm import tqdm
 from PIL import Image
 
 def parse_args():
+    """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Convert YOLO format dataset to CSV')
     parser.add_argument('--images_list', type=str, required=True, 
                         help='Path to file with list of image paths, one per line')
@@ -16,8 +25,15 @@ def parse_args():
 
 def yolo_to_pixel(box, img_width, img_height):
     """
-    Convert YOLO format (center_x, center_y, width, height) to pixel coordinates (xmin, ymin, xmax, ymax)
-    YOLO format is normalized [0, 1]
+    Convert YOLO format (center_x, center_y, width, height) to pixel coordinates (xmin, ymin, xmax, ymax).
+    
+    Args:
+        box (list): YOLO format box [center_x, center_y, width, height] normalized to [0, 1]
+        img_width (int): Image width in pixels
+        img_height (int): Image height in pixels
+    
+    Returns:
+        tuple: Pixel coordinates (xmin, ymin, xmax, ymax)
     """
     center_x, center_y, width, height = box
     
@@ -43,7 +59,13 @@ def yolo_to_pixel(box, img_width, img_height):
 
 def get_image_dimensions(image_path):
     """
-    Function to get image dimensions (width, height)
+    Get image dimensions (width, height).
+    
+    Args:
+        image_path (str): Path to the image file
+    
+    Returns:
+        tuple: (width, height) in pixels, or (None, None) if image cannot be opened
     """
     try:
         with Image.open(image_path) as img:
@@ -54,8 +76,13 @@ def get_image_dimensions(image_path):
 
 def get_label_path(image_path):
     """
-    Convert path from images to labels
-    Example: path/to/images/img0.png -> path/to/labels/img0.txt
+    Convert image path to corresponding label path.
+    
+    Args:
+        image_path (str): Path to the image file
+    
+    Returns:
+        str: Path to the corresponding label file
     """
     img_dir = os.path.dirname(image_path)
     base_dir = os.path.dirname(img_dir)
@@ -73,7 +100,14 @@ def get_label_path(image_path):
 
 def process_yolo_dataset(image_list_path, class_names=None):
     """
-    Process YOLO dataset based on a file with image paths
+    Process YOLO dataset based on a file with image paths.
+    
+    Args:
+        image_list_path (str): Path to file containing list of image paths
+        class_names (list, optional): List of class names
+    
+    Returns:
+        list: List of dictionaries containing processed annotations
     """
     results = []
     
@@ -124,6 +158,7 @@ def process_yolo_dataset(image_list_path, class_names=None):
     return results
 
 def main():
+    """Main function to run the YOLO to CSV conversion."""
     args = parse_args()
     
     # Load class names if provided

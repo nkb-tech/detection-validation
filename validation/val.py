@@ -1,3 +1,11 @@
+"""
+Object Detection Evaluation
+
+This script evaluates object detection results by comparing predictions against ground truth.
+It calculates various metrics including mAP, precision, recall, and F1 scores at different
+IoU thresholds and confidence levels.
+"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,6 +19,13 @@ import os
 warnings.filterwarnings('ignore')
 
 class ObjectDetectionEvaluator:
+    """
+    Evaluator for object detection results.
+    
+    This class handles the evaluation of object detection predictions against ground truth
+    annotations, calculating various metrics and generating visualizations.
+    """
+
     def __init__(self, gt_csv_path, pred_csv_path):
         """
         Initialize the evaluator with ground truth and prediction CSV files.
@@ -296,6 +311,9 @@ class ObjectDetectionEvaluator:
         Args:
             save_csv (bool): Whether to save per-class metrics as CSV
             output_dir (str): Directory to save output files
+        
+        Returns:
+            dict: Dictionary containing evaluation results
         """
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
