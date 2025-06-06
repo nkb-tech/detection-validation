@@ -7,6 +7,7 @@ and converts them to pixel coordinates (xmin, ymin, xmax, ymax) in CSV format.
 """
 
 import os
+from pathlib import Path
 import argparse
 import pandas as pd
 from tqdm import tqdm
@@ -84,19 +85,9 @@ def get_label_path(image_path):
     Returns:
         str: Path to the corresponding label file
     """
-    img_dir = os.path.dirname(image_path)
-    base_dir = os.path.dirname(img_dir)
-    filename = os.path.basename(image_path)
-    name, _ = os.path.splitext(filename)
-    
-    # Replace 'images' folder with 'labels'
-    if 'images' in img_dir:
-        label_dir = img_dir.replace('images', 'labels')
-    else:
-        # If 'images' not in path, just use 'labels' folder in the same parent directory
-        label_dir = os.path.join(base_dir, 'labels')
-    
-    return os.path.join(label_dir, name + '.txt')
+    img_path_pathlib = Path(image_path)
+    lb_path_pathlib = img_path_pathlib.parent.parent / "labels" / (img_path_pathlib.stem + ".txt")
+    return str(lb_path_pathlib)
 
 def process_yolo_dataset(image_list_path, class_names=None):
     """
