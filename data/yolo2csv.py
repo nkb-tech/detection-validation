@@ -87,6 +87,8 @@ def get_label_path(image_path):
     """
     img_path_pathlib = Path(image_path)
     lb_path_pathlib = img_path_pathlib.parent.parent / "labels" / (img_path_pathlib.stem + ".txt")
+    if not lb_path_pathlib.exists():
+        lb_path_pathlib = img_path_pathlib.parent.parent.parent / "labels" / img_path_pathlib.parent.name / (img_path_pathlib.stem + ".txt")
     return str(lb_path_pathlib)
 
 def process_yolo_dataset(image_list_path, class_names=None):
